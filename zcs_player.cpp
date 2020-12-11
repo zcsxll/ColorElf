@@ -1,39 +1,68 @@
 #include "zcs_player.h"
 
-ZcsPlayer::ZcsPlayer()
-{
+//void ZcsPlayer::slot_audio_state(QAudio::State state)
+//{
+//    qDebug() << state;
+//}
 
+ZcsPlayer::ZcsPlayer() : audio_(NULL)
+{
+    format_.setSampleRate(16000);
+    format_.setChannelCount(1);
+    format_.setSampleSize(16);
+    format_.setCodec("audio/pcm");
+    format_.setByteOrder(QAudioFormat::LittleEndian);
+    format_.setSampleType(QAudioFormat::SignedInt);
+
+    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+//    qDebug() << info.supportedCodecs();
+    if (!info.isFormatSupported(format_))
+    {
+        qWarning() << "Raw audio format not supported by backend, cannot play audio.";
+        return;
+    }
+
+    audio_ = new QAudioOutput(format_, 0);
+//    connect(audio_, SIGNAL(stateChanged(QAudio::State)), this, SLOT(slot_audio_state(QAudio::State)));
+//    audio_state_ = 0;
 }
 
 void ZcsPlayer::run()
 {
+    QFile file;
+    string wave_path;
+    int flag;
     while(true)
     {
-        qDebug() << 11;
-        QAudioFormat format;
-        format.setSampleRate(16000);
-        format.setChannelCount(1);
-        format.setSampleSize(16);
-        format.setCodec("audio/pcm");
-        format.setByteOrder(QAudioFormat::LittleEndian);
-        format.setSampleType(QAudioFormat::SignedInt);
+        pair<string, int> cmd = zsem_.acquire();
 
-        QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
-        qDebug() << info.supportedCodecs();
-        if (!info.isFormatSupported(format))
+        if(audio_->state() != QAudio::State::IdleState && audio_->state() != QAudio::State::StoppedState)
         {
-            qWarning() << "Raw audio format not supported by backend, cannot play audio.";
-            break;
+            qDebug() << "audio is running";
+            if(cmd.second == 0)
+            {
+                continue;
+            }
+            qDebug() << "force stop";
+            audio_->stop();
         }
 
-        QAudioOutput *audio_ = new QAudioOutput(format, 0);
         audio_->reset();
-        QFile file;
-        file.setFileName("assets:/audio/error_mp3_decode.wav");
+        file.close();
+//        file.setFileName("assets:/audio/error_mp3_decode.wav");
+        file.setFileName(cmd.first.c_str());
         file.open(QIODevice::ReadOnly);
-        qDebug() << file.isOpen() << "iiiiiiiiiiiiiiiiiiii";
+        if(!file.isOpen())
+        {
+            qWarning() << "cannot open file";
+            continue;
+        }
         audio_->start(&file);
-
-        sleep(10);
     }
+}
+
+int ZcsPlayer::play(const string &wav, bool force_stop)
+{
+    zsem_.release(wav, int(force_stop));
+    return 0;
 }

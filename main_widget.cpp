@@ -57,6 +57,7 @@ void MainWidget::slot_btn_clicked()
 {
     QPushButton* btn = (QPushButton*)sender();
     qDebug() << btn->text();
+    zplayer_->play("assets:/audio/error_mp3_decode.wav", true);
 
 //    label_->setText("蓝");
 //    label_->setStyleSheet("color:rgb(255, 255, 0);background-color:rgb(255, 0, 0);");

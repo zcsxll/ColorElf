@@ -12,11 +12,13 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     main_widget.cpp \
-    zcs_player.cpp
+    zcs_player.cpp \
+    zcs_semaphore.cpp
 
 HEADERS += \
     main_widget.h \
-    zcs_player.h
+    zcs_player.h \
+    zcs_semaphore.h
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
