@@ -17,5 +17,30 @@ int main(int argc, char *argv[])
 //    label_->setText(size.c_str());
     MainWidget w(mm.width(), mm.height());
     w.show();
+
+//    QAudioFormat format;
+//    format.setSampleRate(16000);
+//    format.setChannelCount(1);
+//    format.setSampleSize(16);
+//    format.setCodec("audio/pcm");
+//    format.setByteOrder(QAudioFormat::LittleEndian);
+//    format.setSampleType(QAudioFormat::SignedInt);
+
+//    QAudioDeviceInfo info(QAudioDeviceInfo::defaultOutputDevice());
+//    qDebug() << info.supportedCodecs();
+//    if (!info.isFormatSupported(format))
+//    {
+//        qWarning() << "Raw audio format not supported by backend, cannot play audio.";
+//        return -1;
+//    }
+
+//    QAudioOutput *audio_ = new QAudioOutput(format, 0);
+//    audio_->reset();
+//    QFile file;
+//    file.setFileName("assets:/audio/error_mp3_decode.wav");
+//    file.open(QIODevice::ReadOnly);
+//    qDebug() << file.isOpen() << "iiiiiiiiiiiiiiiiiiii";
+//    audio_->start(&file);
+
     return a.exec();
 }
