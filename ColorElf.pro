@@ -12,11 +12,13 @@ CONFIG += c++11
 SOURCES += \
     main.cpp \
     main_widget.cpp \
+    zcs_color.cpp \
     zcs_player.cpp \
     zcs_semaphore.cpp
 
 HEADERS += \
     main_widget.h \
+    zcs_color.h \
     zcs_player.h \
     zcs_semaphore.h
 
@@ -26,8 +28,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 android {
-    audio.files += audio/*.mp3
-    audio.files += audio/*.wav
-    audio.path = /assets/audio
-    INSTALLS += audio
+#    audio.files += audio/*.mp3
+    audio_wav.files += audio_wav/*.wav
+    audio_wav.path = /assets/audio_wav
+    INSTALLS += audio_wav
 }

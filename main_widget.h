@@ -11,6 +11,7 @@
 #include <QDebug>
 
 #include "zcs_player.h"
+#include "zcs_color.h"
 
 class MainWidget : public QWidget
 {
@@ -21,6 +22,7 @@ private:
     int word_size_;
 
     ZcsPlayer *zplayer_;
+    ZcsColor *zcolor_;
 
     QLabel *label_;
     QPushButton *btn_a_;
@@ -34,7 +36,7 @@ private:
 
 private slots:
     void slot_btn_clicked();
-    void slot_position_changed(qint64 pos);
+//    void slot_position_changed(qint64 pos);
 
 public:
     MainWidget(int screen_width, int screen_height, QWidget *parent = nullptr);

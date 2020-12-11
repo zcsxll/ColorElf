@@ -30,8 +30,6 @@ ZcsPlayer::ZcsPlayer() : audio_(NULL)
 void ZcsPlayer::run()
 {
     QFile file;
-    string wave_path;
-    int flag;
     while(true)
     {
         pair<string, int> cmd = zsem_.acquire();
@@ -54,7 +52,7 @@ void ZcsPlayer::run()
         file.open(QIODevice::ReadOnly);
         if(!file.isOpen())
         {
-            qWarning() << "cannot open file";
+            qWarning() << "cannot open " << cmd.first.c_str();
             continue;
         }
         audio_->start(&file);

@@ -11,6 +11,8 @@ MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
     zplayer_ = new ZcsPlayer();
     zplayer_->start();
 
+    zcolor_ = new ZcsColor();
+
     label_ = new QLabel();
     label_->setAlignment(Qt::AlignCenter);
     label_->setMinimumHeight(label_size_);
@@ -44,6 +46,12 @@ MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
     vbox_->addLayout(hbox_1_);
     vbox_->addLayout(hbox_2_);
 
+    int height = btn_a_->width() * 0.5;
+    btn_a_->setMinimumHeight(height);
+    btn_b_->setMinimumHeight(height);
+    btn_c_->setMinimumHeight(height);
+    btn_d_->setMinimumHeight(height);
+
     this->setLayout(vbox_);
 //    player_ = new QMediaPlayer(this);
 //    connect(player_, SIGNAL(positionChanged(qint64)), this, SLOT(slot_position_changed(qint64)));
@@ -57,10 +65,12 @@ void MainWidget::slot_btn_clicked()
 {
     QPushButton* btn = (QPushButton*)sender();
     qDebug() << btn->text();
-    zplayer_->play("assets:/audio/error_mp3_decode.wav", true);
+//    zplayer_->play("assets:/audio_wav/correct.wav", true);
 
-//    label_->setText("蓝");
-//    label_->setStyleSheet("color:rgb(255, 255, 0);background-color:rgb(255, 0, 0);");
+    QuestionColorPlan qcp = zcolor_->get_question_plan();
+
+    label_->setText(qcp.w_name_.c_str());
+    label_->setStyleSheet(qcp.style_string_.c_str());
 
 //    player->setMedia(QUrl::fromLocalFile("assets:/audio/test.mp3"));
 //    player_->setMedia(QUrl::fromLocalFile("assets:/audio/error_mp3_decode.wav"));
@@ -71,9 +81,4 @@ void MainWidget::slot_btn_clicked()
 //    ret = player_->state();
 //    qDebug() << ret << "=====================================";
 //    QMess
-}
-
-void MainWidget::slot_position_changed(qint64 pos)
-{
-    qDebug() << pos << "--------------";
 }
