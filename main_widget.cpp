@@ -2,6 +2,32 @@
 
 using namespace std;
 
+void MainWidget::slot_btn_clicked(int id)
+{
+    qDebug() << " " << id;
+    if(answer_btn_id_ == id)
+    {
+//        zplayer_->play("assets:/audio_wav/correct.wav", true);
+//        sleep(2);
+        this->update_qa();
+    }
+    else
+    {
+        zplayer_->play("assets:/audio_wav/wrong.wav", false);
+    }
+//    zplayer_->play("assets:/audio_wav/correct.wav", true);
+
+//    player->setMedia(QUrl::fromLocalFile("assets:/audio/test.mp3"));
+//    player_->setMedia(QUrl::fromLocalFile("assets:/audio/error_mp3_decode.wav"));
+//    player_->setVolume(30);
+//    int ret = player_->state();
+//    qDebug() << ret << "=====================================";
+//    player_->play();
+//    ret = player_->state();
+//    qDebug() << ret << "=====================================";
+//    QMess
+}
+
 MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
     : QWidget(parent)
 {
@@ -20,17 +46,15 @@ MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
     QFont font("Microsoft YaHei", word_size_, QFont::Bold); //第一个属性是字体（微软雅黑），第二个是大小，第三个是加粗（权重是75）
     label_->setFont(font);
 
-//    label_->setText("红");
-//    label_->setStyleSheet("color:rgb(255, 0, 0);background-color:rgb(255, 0, 255);");
-
     btn_a_ = new QPushButton("A");
-    connect(btn_a_, &QPushButton::clicked, this, &MainWidget::slot_btn_clicked);
+    connect(btn_a_, &QPushButton::clicked, [=] { slot_btn_clicked(0); });
+//    connect(btn_a_, &QPushButton::clicked, this, &MainWidget::slot_btn_clicked);
     btn_b_ = new QPushButton("B");
-    connect(btn_b_, &QPushButton::clicked, this, &MainWidget::slot_btn_clicked);
+    connect(btn_b_, &QPushButton::clicked, [=] { slot_btn_clicked(1); });
     btn_c_ = new QPushButton("C");
-    connect(btn_c_, &QPushButton::clicked, this, &MainWidget::slot_btn_clicked);
+    connect(btn_c_, &QPushButton::clicked, [=] { slot_btn_clicked(2); });
     btn_d_ = new QPushButton("D");
-    connect(btn_d_, &QPushButton::clicked, this, &MainWidget::slot_btn_clicked);
+    connect(btn_d_, &QPushButton::clicked, [=] { slot_btn_clicked(3); });
 
     vbox_ = new QVBoxLayout();
     vbox_->addWidget(label_);
@@ -55,30 +79,30 @@ MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
     this->setLayout(vbox_);
 //    player_ = new QMediaPlayer(this);
 //    connect(player_, SIGNAL(positionChanged(qint64)), this, SLOT(slot_position_changed(qint64)));
+
+    this->update_qa();
 }
 
 MainWidget::~MainWidget()
 {
 }
 
-void MainWidget::slot_btn_clicked()
+void MainWidget::update_qa()
 {
-    QPushButton* btn = (QPushButton*)sender();
-    qDebug() << btn->text();
-//    zplayer_->play("assets:/audio_wav/correct.wav", true);
-
     QuestionColorPlan qcp = zcolor_->get_question_plan();
+    AnswerColorPlan acp = zcolor_->get_answer_plan(&qcp);
+
+    zplayer_->play(qcp.question_audio(), true);
 
     label_->setText(qcp.w_name_.c_str());
     label_->setStyleSheet(qcp.style_string_.c_str());
 
-//    player->setMedia(QUrl::fromLocalFile("assets:/audio/test.mp3"));
-//    player_->setMedia(QUrl::fromLocalFile("assets:/audio/error_mp3_decode.wav"));
-//    player_->setVolume(30);
-//    int ret = player_->state();
-//    qDebug() << ret << "=====================================";
-//    player_->play();
-//    ret = player_->state();
-//    qDebug() << ret << "=====================================";
-//    QMess
+    btn_a_->setText(acp.v_c_[0].c_str());
+    btn_b_->setText(acp.v_c_[1].c_str());
+    btn_c_->setText(acp.v_c_[2].c_str());
+    btn_d_->setText(acp.v_c_[3].c_str());
+    qDebug() << "question id: " << qcp.q_id_ <<" answer id: " << acp.aid_;
+
+//    btn_a_->setStyleSheet("background-color: rgb(170, 0, 255);");
+    answer_btn_id_ = acp.aid_;
 }

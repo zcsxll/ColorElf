@@ -20,6 +20,7 @@ class MainWidget : public QWidget
 private:
     int label_size_;
     int word_size_;
+    int answer_btn_id_;
 
     ZcsPlayer *zplayer_;
     ZcsColor *zcolor_;
@@ -35,11 +36,13 @@ private:
     QHBoxLayout *hbox_2_;
 
 private slots:
-    void slot_btn_clicked();
+    void slot_btn_clicked(int id);
 //    void slot_position_changed(qint64 pos);
 
 public:
     MainWidget(int screen_width, int screen_height, QWidget *parent = nullptr);
     ~MainWidget();
+
+    void update_qa();
 };
 #endif // MAINWIDGET_H

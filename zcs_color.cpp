@@ -19,12 +19,13 @@ ZcsColor::ZcsColor()
     m_c_.insert(make_pair("青", ColorUnit(000, 255, 255)));
     m_c_.insert(make_pair("橙", ColorUnit(250, 128, 010)));
     m_c_.insert(make_pair("黑", ColorUnit(000, 000, 000)));
+
+    QTime time = QTime::currentTime();
+    qsrand(time.msec() + time.second() * 1000);
 }
 
 QuestionColorPlan ZcsColor::get_question_plan()
 {
-    QTime time = QTime::currentTime();
-    qsrand(time.msec() + time.second() * 1000);
     size_t sz = v_c_.size();
     int i_w = qrand() % sz;
     int i_f = qrand() % sz;
@@ -38,5 +39,38 @@ QuestionColorPlan ZcsColor::get_question_plan()
     string style_string = m_c_[f].f_color() + m_c_[b].b_color();
 //    qDebug() << style_string.c_str();
 
-    return QuestionColorPlan(f, b, w, style_string, qrand() % 3);
+    int qid = qrand() % 3;
+
+    return QuestionColorPlan(f, b, w, style_string, qid);
+}
+
+AnswerColorPlan ZcsColor::get_answer_plan(QuestionColorPlan *qcp)
+{
+    string answer_name = qcp->answer_color();
+//    qDebug() << answer_name.c_str() << " " << qcp->q_id_;
+    size_t sz = v_c_.size();
+    int i[3]; //生成3个不同的颜色id
+    i[0] = qrand() % sz;
+    for(; v_c_[i[0]] == answer_name; i[0] = qrand() % sz);
+    i[1] = qrand() % sz;
+    for(; i[1] == i[0] || v_c_[i[1]] == answer_name; i[1] = qrand() % sz);
+    i[2] = qrand() % sz;
+    for(; i[2] == i[1] || i[2] == i[0] || v_c_[i[2]] == answer_name; i[2] = qrand() % sz);
+
+    int aid = qrand() % 4; //答案用哪个按钮
+    AnswerColorPlan acp;
+    acp.aid_ = aid;
+    for(int j = 0, k = 0; j < 4; j ++)
+    {
+        if(j == aid)
+        {
+            acp.v_c_.push_back(answer_name);
+        }
+        else
+        {
+            acp.v_c_.push_back(v_c_[i[k ++]]);
+        }
+    }
+
+    return acp;
 }
