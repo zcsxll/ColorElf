@@ -72,5 +72,15 @@ AnswerColorPlan ZcsColor::get_answer_plan(QuestionColorPlan *qcp)
         }
     }
 
+    for(int j = 0; j < 4; j ++) //40%的概率清空v_c_[j]，说明采用绘制背景色的方式展示按钮
+    {
+        acp.v_style_.push_back(m_c_[acp.v_c_[j]].b_color());
+        int rate = qrand() % 100;
+        if(rate >= 60)
+        {
+            acp.v_c_[j] = "";
+        }
+    }
+
     return acp;
 }

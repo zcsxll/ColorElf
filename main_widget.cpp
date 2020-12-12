@@ -81,6 +81,9 @@ MainWidget::MainWidget(int screen_width, int screen_height, QWidget *parent)
 //    connect(player_, SIGNAL(positionChanged(qint64)), this, SLOT(slot_position_changed(qint64)));
 
     this->update_qa();
+
+//    QColor b_color = btn_a_->palette().color(QPalette::Background);
+//    qDebug() << b_color.red() << " " << b_color.green() << " " << b_color.blue();
 }
 
 MainWidget::~MainWidget()
@@ -98,9 +101,21 @@ void MainWidget::update_qa()
     label_->setStyleSheet(qcp.style_string_.c_str());
 
     btn_a_->setText(acp.v_c_[0].c_str());
+    if(acp.v_c_[0] == "") btn_a_->setStyleSheet(acp.v_style_[0].c_str());
+    else btn_a_->setStyleSheet("background-color: rgb(243, 243, 243);");
+
     btn_b_->setText(acp.v_c_[1].c_str());
+    if(acp.v_c_[1] == "") btn_b_->setStyleSheet(acp.v_style_[1].c_str());
+    else btn_b_->setStyleSheet("background-color: rgb(243, 243, 243);");
+
     btn_c_->setText(acp.v_c_[2].c_str());
+    if(acp.v_c_[2] == "") btn_c_->setStyleSheet(acp.v_style_[2].c_str());
+    else btn_c_->setStyleSheet("background-color: rgb(243, 243, 243);");
+
     btn_d_->setText(acp.v_c_[3].c_str());
+    if(acp.v_c_[3] == "") btn_d_->setStyleSheet(acp.v_style_[3].c_str());
+    else btn_d_->setStyleSheet("background-color: rgb(243, 243, 243);");
+
     qDebug() << "question id: " << qcp.q_id_ <<" answer id: " << acp.aid_;
 
 //    btn_a_->setStyleSheet("background-color: rgb(170, 0, 255);");
